@@ -3,23 +3,29 @@ package Fanta;
 public class PlayerStats {
     private String season;
     private String team;
+    private long playedMatches;
     private long goals;
     private long assists;
+    private long concededGoals;
+    private long ownGoals;
     private long redCards;
     private long yellowCards;
     private double average;
-    private double fantamedia;
+    private double fantaAverage;
     private double variance;
 
-    public PlayerStats(String season, String team, long goals, long assists, long redCards, long yellowCards, double average, double fantamedia, double variance){
+    public PlayerStats(String season, String team, long playedMatches, long goals, long assists, long concededGoals, long ownGoals, long redCards, long yellowCards, double average, double fantamedia, double variance){
         this.season = season;
         this.team = team;
+        this.playedMatches = playedMatches;
         this.goals = goals;
         this.assists = assists;
+        this.concededGoals = concededGoals;
+        this.ownGoals = ownGoals;
         this.redCards = redCards;
         this.yellowCards = yellowCards;
         this.average = average;
-        this.fantamedia = fantamedia;
+        this.fantaAverage = fantamedia;
         this.variance = variance;
     }
 
@@ -31,12 +37,24 @@ public class PlayerStats {
         return team;
     }
 
+    public long getPlayedMatches() {
+        return playedMatches;
+    }
+
     public long getGoals() {
         return goals;
     }
 
     public long getAssists() {
         return assists;
+    }
+
+    public long getConcededGoals() {
+        return concededGoals;
+    }
+
+    public long getOwnGoals() {
+        return ownGoals;
     }
 
     public long getRedCards() {
@@ -51,8 +69,8 @@ public class PlayerStats {
         return average;
     }
 
-    public double getFantamedia() {
-        return fantamedia;
+    public double getFantaAverage() {
+        return fantaAverage;
     }
 
     public double getVariance() {

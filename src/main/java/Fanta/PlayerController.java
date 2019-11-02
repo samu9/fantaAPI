@@ -26,7 +26,7 @@ public class PlayerController {
     @RequestMapping(value = "/player", method = RequestMethod.GET)
     public Player[] getAllPlayers(){
 
-        List<Object> list = this.g.V().has("id giocatore").order().by("nome").values("id giocatore").toList();
+        List<Object> list = this.g.V().has("player id").order().by("name").values("player id").toList();
         Player[] allPlayers = new Player[list.size()];
         for(int i = 0; i < list.size(); i++){
             allPlayers[i] = getPlayerById(Long.parseLong(String.valueOf(list.get(i))));
@@ -38,29 +38,45 @@ public class PlayerController {
     @RequestMapping(value = "/player/{id}", method = RequestMethod.GET)
     public Player getPlayerById(@PathVariable long id) {
 
-        Path p = this.g.V().has("id giocatore", id).as("player")
-                .out("gioca per").as("team")
-                .in("gioca per").has("id giocatore",id).out("è assistito da").as("prosecutor")
+        Path p = this.g.V().has("player id", id).as("player")
+                .out("plays for").as("team")
+                .in("plays for").has("player id",id).out("is assisted by").as("prosecutor")
                 .path().next();
 
         Vertex player = p.get("player");
         Vertex team = p.get("team");
         Vertex prosecutor = p.get("prosecutor");
 
-        PlayerStats[] stats = new PlayerStats[1];
-        stats[0] = new PlayerStats("2017/2018","Juventus",3,5,1,3,20,20.1,1.1);
+        List<Vertex> statList = this.g.V().has("player id", id).out("stats").toList();
+        PlayerStats[] stats = new PlayerStats[statList.size()];
+        for(int i = 0; i < statList.size(); i++){
+            Vertex v = statList.get(i);
+            String year = (String)v.property("year").value();
+            long playedMatches = Long.parseLong(String.valueOf(v.property("played matches").value()));
+            long goals = Long.parseLong(String.valueOf(v.property("scored goals").value()));
+            long assists = Long.parseLong(String.valueOf(v.property("assists").value()));
+            long concededGoals = Long.parseLong(String.valueOf(v.property("conceded goals").value()));
+            long ownGoals = Long.parseLong(String.valueOf(v.property("own goals").value()));
+            long redCards = Long.parseLong(String.valueOf(v.property("red cards").value()));
+            long yellowCards = Long.parseLong(String.valueOf(v.property("yellow cards").value()));
+            double average = Double.parseDouble(String.valueOf(v.property("average").value()));
+            double fantaAverage = Double.parseDouble(String.valueOf(v.property("fanta average").value()));
+            stats[i] = new PlayerStats(year,"Team",playedMatches,goals,assists,concededGoals,ownGoals,redCards,yellowCards,average,fantaAverage,0);
 
-        String name = (String)player.property("nome").value();
-        String birthplace = (String)player.property("luogo nascita").value();
-        LocalDate birthdate = LocalDate.parse((String)player.property("data nascita").value());
+        }
+
+
+        String name = (String)player.property("name").value();
+        String birthplace = (String)player.property("birthplace").value();
+        LocalDate birthdate = LocalDate.parse((String)player.property("birthdate").value());
         long age = YEARS.between(birthdate, today);
-        String height = (String)player.property("altezza").value();
-        String position = (String)player.property("ruolo").value();
-        String mainfoot = (String)player.property("piede").value();
+        String height = (String)player.property("height").value();
+        String position = (String)player.property("role").value();
+        String mainfoot = (String)player.property("mainFoot").value();
         String img = (String)player.property("img").value();
-
-        String teamName = (String)team.property("nome").value();
-        String prosecutorName = (String)prosecutor.property("nome").value();
-        return new Player(id,name,birthplace,birthdate,age,height,position,mainfoot,stats, teamName, prosecutorName,img);
+        long quot = Long.parseLong(String.valueOf(player.property("quot").value()));
+        String teamName = (String)team.property("name").value();
+        String prosecutorName = (String)prosecutor.property("name").value();
+        return new Player(id,name,birthplace,birthdate,age,height,position,mainfoot,stats, quot, teamName, prosecutorName,img);
     }
 }

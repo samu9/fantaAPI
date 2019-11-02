@@ -26,7 +26,7 @@ public class CoachController {
 
     @RequestMapping(value = "/coach", method = RequestMethod.GET)
     public Coach[] getAllCoaches(){
-        List<Object> list = this.g.V().has("id allenatore").order().by("nome").values("id allenatore").toList();
+        List<Object> list = this.g.V().has("coach id").order().by("name").values("coach id").toList();
 
         Coach[] allCoaches = new Coach[list.size()];
         for(int i = 0; i < list.size(); i++){
@@ -38,8 +38,8 @@ public class CoachController {
     @RequestMapping(value = "/coach/{id}", method = RequestMethod.GET)
     public  Coach getCoachById(@PathVariable long id){
 
-        Path p = this.g.V().has("id allenatore", id).as("coach")
-                .out("allena").as("team").path().next();
+        Path p = this.g.V().has("coach id", id).as("coach")
+                .out("trains").as("team").path().next();
 
         Vertex coach = p.get("coach");
         Vertex team = p.get("team");
@@ -47,12 +47,12 @@ public class CoachController {
         String name = (String)coach.property("nome").value();
 
         // vanno corrette le date, ora sono timestap con l'ora
-        String tmp = (String)coach.property("data nascita").value();
+        String tmp = (String)coach.property("birthdate").value();
         LocalDate birthdate = LocalDate.parse(tmp.split(" ")[0]);
 
-        String birthplace = (String)coach.property("luogo nascita").value();
-        String nationality = (String)coach.property("nazionalita").value();
-        String teamName = (String)team.property("nome").value();
+        String birthplace = (String)coach.property("birthplace").value();
+        String nationality = (String)coach.property("nationality").value();
+        String teamName = (String)team.property("name").value();
 
         Coach result = new Coach(id,name,birthdate,birthplace,nationality,teamName);
         return result;

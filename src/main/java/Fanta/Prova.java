@@ -17,7 +17,7 @@ public class Prova {
 
     public static void createUserSchema(final JanusGraphManagement management){
         management.makeVertexLabel("user").make();
-        management.makePropertyKey("id user").dataType(Long.class).make();
+        management.makePropertyKey("userid").dataType(Long.class).make();
         management.makePropertyKey("username").dataType(String.class).make();
         management.makeEdgeLabel("ha la squadra").make();
 

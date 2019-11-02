@@ -31,7 +31,7 @@ public class TeamController {
 
     @RequestMapping(value = "/team", method = RequestMethod.GET)
     public Team[] getAllTeams() throws java.io.IOException {
-        List<Object> list = this.g.V().has("id squadra").order().by("nome").values("id squadra").toList();
+        List<Object> list = this.g.V().has("team id").order().by("name").values("team id").toList();
 
         Team[] allTeams = new Team[list.size()];
         for(int i = 0; i < list.size(); i++){
@@ -42,7 +42,7 @@ public class TeamController {
 
     @RequestMapping(value = "/team/{id}", method = RequestMethod.GET)
     public Team getTeamById(@PathVariable long id) throws java.lang.IllegalStateException {
-        Path p = this.g.V().has("id squadra", id).as("team").in("allena").as("coach").path().next();
+        Path p = this.g.V().has("team id", id).as("team").in("trains").as("coach").path().next();
 
         Vertex team = p.get("team");
         Vertex coach = p.get("coach");
@@ -50,7 +50,7 @@ public class TeamController {
         LocalDate today = LocalDate.now();
 
         double total = 0;
-        List<Object> list = this.g.V().has("id squadra", id).in("gioca per").values("data nascita").toList();
+        List<Object> list = this.g.V().has("team id", id).in("plays for").values("birthdate").toList();
 
         for(Object o : list){
             LocalDate birthdate = LocalDate.parse((String)o.toString());
@@ -58,7 +58,7 @@ public class TeamController {
             total += age;
         }
 
-        String name = (String) team.property("nome").value();
+        String name = (String) team.property("name").value();
         long players = list.size();
         double avgAge = Math.round(total/list.size() * 100.00) / 100.00;
         String logo = "";
@@ -67,7 +67,7 @@ public class TeamController {
         }catch (Exception e) {
             System.out.println("Errore squadra" + id);
         }
-        String coachName = (String) coach.property("nome").value();
+        String coachName = (String) coach.property("name").value();
 
 
         Team result = new Team(id, name, players, avgAge, logo, coachName);

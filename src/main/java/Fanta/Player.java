@@ -15,6 +15,7 @@ public class Player {
     private final String teamName;
     private final String prosecutorName;
     private final PlayerStats[] stats;
+    private final long quot;
     private final String img;
 
 
@@ -27,6 +28,7 @@ public class Player {
                   String position,
                   String mainFoot,
                   PlayerStats[] stats,
+                  long quot,
                   String teamName,
                   String prosecutorName,
                   String img) {
@@ -39,6 +41,7 @@ public class Player {
         this.position = position;
         this.mainFoot = mainFoot;
         this.stats = stats;
+        this.quot = quot;
         this.teamName = teamName;
         this.prosecutorName = prosecutorName;
         this.img = img;
@@ -78,6 +81,10 @@ public class Player {
 
     public PlayerStats[] getStats() {
         return stats;
+    }
+
+    public long getQuot() {
+        return quot;
     }
 
     public String getTeamName() {

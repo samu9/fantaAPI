@@ -25,7 +25,7 @@ public class UserController {
     public User createUser(@RequestParam(value="username",required = true) String username){
         Vertex v = this.g.addV("user").property("username",username).property("id user", 1).next();
         System.out.println(v);
-        User result = new User(1,username);
+        User result = new User(1,username,"");
         return result;
     }
 
@@ -36,7 +36,7 @@ public class UserController {
         User[] result = new User[l.size()];
         for(int i = 0; i < l.size(); i++){
             System.out.println(l.get(i));
-            result[i] = new User(i,(String)l.get(i).property("username").value());
+            result[i] = new User(i,(String)l.get(i).property("username").value(),(String)l.get(i).property("email").value());
         }
         return result;
     }
