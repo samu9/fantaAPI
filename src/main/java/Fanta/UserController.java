@@ -23,7 +23,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
     public User createUser(@RequestParam(value="username",required = true) String username){
-        Vertex v = this.g.addV("user").property("username",username).property("id user", 1).next();
+        Vertex v = this.g.addV("user").property("username",username).property("user id", 1).property("email","prova@gmail.com").next();
         System.out.println(v);
         User result = new User(1,username,"");
         return result;
@@ -31,7 +31,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.GET)
     public User[] getUsers(){
-        List<Vertex> l = this.g.V().has("id user").toList();
+        List<Vertex> l = this.g.V().has("user id").toList();
         System.out.println(l);
         User[] result = new User[l.size()];
         for(int i = 0; i < l.size(); i++){

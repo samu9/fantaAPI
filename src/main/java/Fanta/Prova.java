@@ -15,14 +15,6 @@ import static java.time.temporal.ChronoUnit.YEARS;
 
 public class Prova {
 
-    public static void createUserSchema(final JanusGraphManagement management){
-        management.makeVertexLabel("user").make();
-        management.makePropertyKey("userid").dataType(Long.class).make();
-        management.makePropertyKey("username").dataType(String.class).make();
-        management.makeEdgeLabel("ha la squadra").make();
-
-    }
-
     public static void main(String[] args) {
 
         JanusGraph graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
@@ -30,7 +22,20 @@ public class Prova {
         final JanusGraphManagement management = graph.openManagement();
 
 
-        createUserSchema(management);
+//        g.addV("user").property("user id", 5).property("username","samu").property("password","xxx").property("email","samu@gmail.com").next();
+//        g.tx().commit();
+//        g.tx().rollback();
+        g.V().has("user id","5").drop().iterate();
+        g.tx().commit();
+
+        List<Vertex> l = g.V().has("user id").toList();
+        for(Vertex v : l){
+            System.out.println(v.property("user id").value() + " - " + v.property("username").value());
+
+        }
+        System.out.println(l.size());
+        g.tx().rollback();
+
 
         graph.close();
     }
