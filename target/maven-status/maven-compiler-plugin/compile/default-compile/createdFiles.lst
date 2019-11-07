@@ -1,12 +1,14 @@
 Fanta\Player.class
 Fanta\User.class
 Fanta\FantaTeamController.class
+Fanta\Prosecutor.class
 Fanta\CoachController.class
 Fanta\President.class
 Fanta\Stadium.class
 Fanta\PlayerController.class
 Fanta\Team.class
 Fanta\App.class
+Fanta\ProsecutorController.class
 Fanta\ErrorController.class
 Fanta\PlayerStats.class
 Fanta\TeamController.class
