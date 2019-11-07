@@ -24,7 +24,7 @@ public class CoachController {
         this.g = graph.traversal();
     }
 
-    @RequestMapping(value = "/coach", method = RequestMethod.GET)
+    @RequestMapping(value = "/coach/", method = RequestMethod.GET)
     public Coach[] getAllCoaches(){
         List<Object> list = this.g.V().has("coach id").order().by("name").values("coach id").toList();
 
@@ -37,14 +37,13 @@ public class CoachController {
 
     @RequestMapping(value = "/coach/{id}", method = RequestMethod.GET)
     public  Coach getCoachById(@PathVariable long id){
-
         Path p = this.g.V().has("coach id", id).as("coach")
                 .out("trains").as("team").path().next();
 
         Vertex coach = p.get("coach");
         Vertex team = p.get("team");
 
-        String name = (String)coach.property("nome").value();
+        String name = (String)coach.property("name").value();
 
         // vanno corrette le date, ora sono timestap con l'ora
         String tmp = (String)coach.property("birthdate").value();
@@ -53,8 +52,9 @@ public class CoachController {
         String birthplace = (String)coach.property("birthplace").value();
         String nationality = (String)coach.property("nationality").value();
         String teamName = (String)team.property("name").value();
+        long teamId = Long.parseLong(String.valueOf(team.property("team id").value()));
 
-        Coach result = new Coach(id,name,birthdate,birthplace,nationality,teamName);
+        Coach result = new Coach(id,name,birthdate,birthplace,nationality,teamName, teamId);
         return result;
     }
 }

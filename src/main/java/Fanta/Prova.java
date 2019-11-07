@@ -22,11 +22,11 @@ public class Prova {
         final JanusGraphManagement management = graph.openManagement();
 
 
-//        g.addV("user").property("user id", 5).property("username","samu").property("password","xxx").property("email","samu@gmail.com").next();
-//        g.tx().commit();
-//        g.tx().rollback();
-        g.V().has("user id","5").drop().iterate();
+        g.addV("user").property("user id", 1).property("username","samu").property("password","xxx").property("email","samu@gmail.com").next();
         g.tx().commit();
+//        g.tx().rollback();
+//        g.V().has("user id","5").drop().iterate();
+//        g.tx().commit();
 
         List<Vertex> l = g.V().has("user id").toList();
         for(Vertex v : l){
@@ -36,8 +36,6 @@ public class Prova {
         System.out.println(l.size());
         g.tx().rollback();
 
-
         graph.close();
     }
 }
-

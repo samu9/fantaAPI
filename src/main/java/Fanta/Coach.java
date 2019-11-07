@@ -8,15 +8,17 @@ public class Coach {
     private final LocalDate birthdate;
     private final String birthplace;
     private final String nationality;
-    private final String team;
+    private final String teamName;
+    private final long teamId;
 
-    public Coach(long id, String name, LocalDate birthdate, String birthplace, String nationality, String team){
+    public Coach(long id, String name, LocalDate birthdate, String birthplace, String nationality, String teamName, long teamId){
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
         this.birthplace = birthplace;
         this.nationality = nationality;
-        this.team = team;
+        this.teamName = teamName;
+        this.teamId = teamId;
 
     }
 
@@ -40,7 +42,11 @@ public class Coach {
         return nationality;
     }
 
-    public String getTeam() {
-        return team;
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public long getTeamId() {
+        return teamId;
     }
 }

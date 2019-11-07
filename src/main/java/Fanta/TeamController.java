@@ -20,13 +20,10 @@ import static java.time.temporal.ChronoUnit.YEARS;
 public class TeamController {
     JanusGraph graph;
     GraphTraversalSource g;
-    Team[] teams;
 
     public TeamController(){
         this.graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
         this.g = graph.traversal();
-
-
     }
 
     @RequestMapping(value = "/team", method = RequestMethod.GET)
@@ -42,15 +39,19 @@ public class TeamController {
 
     @RequestMapping(value = "/team/{id}", method = RequestMethod.GET)
     public Team getTeamById(@PathVariable long id) throws java.lang.IllegalStateException {
-        Path p = this.g.V().has("team id", id).as("team").in("trains").as("coach").path().next();
+        Path p = this.g.V().has("team id", id).as("team").in("trains").as("coach")
+                .out("trains").has("team id",id).in("owns").as("president")
+                .out("owns").has("team id",id).out("plays in").as("stadium").path().next();
 
         Vertex team = p.get("team");
         Vertex coach = p.get("coach");
+        Vertex president = p.get("president");
+        Vertex stadium = p.get("stadium");
 
         LocalDate today = LocalDate.now();
 
         double total = 0;
-        List<Object> list = this.g.V().has("team id", id).in("plays for").values("birthdate").toList();
+        List<Object> list = this.g.V(team).in("plays for").values("birthdate").toList();
 
         for(Object o : list){
             LocalDate birthdate = LocalDate.parse((String)o.toString());
@@ -68,9 +69,13 @@ public class TeamController {
             System.out.println("Errore squadra" + id);
         }
         String coachName = (String) coach.property("name").value();
+        long coachId = Long.parseLong(String.valueOf(coach.property("coach id").value()));
+        String presidentName = (String) president.property("name").value();
+        long presidentId = Long.parseLong(String.valueOf(president.property("president id").value()));
+        String stadiumName = (String) stadium.property("name").value();
+        long stadiumId = Long.parseLong(String.valueOf(stadium.property("stadium id").value()));
 
-
-        Team result = new Team(id, name, players, avgAge, logo, coachName);
+        Team result = new Team(id, name, players, avgAge, logo, coachName, coachId, presidentName, presidentId, stadiumName, stadiumId);
         return result;
 
     }

@@ -21,30 +21,43 @@ public class UserController {
         this.management = graph.openManagement();
     }
 
-    @RequestMapping(value = "/user/", method = RequestMethod.POST)
-    public User createUser(@RequestParam(value="username",required = true) String username){
-        Vertex v = this.g.addV("user").property("username",username).property("user id", 1).property("email","prova@gmail.com").next();
-        System.out.println(v);
-        User result = new User(1,username,"");
-        return result;
-    }
-
     @RequestMapping(value = "/user/", method = RequestMethod.GET)
     public User[] getUsers(){
         List<Vertex> l = this.g.V().has("user id").toList();
-        System.out.println(l);
+
         User[] result = new User[l.size()];
         for(int i = 0; i < l.size(); i++){
-            System.out.println(l.get(i));
-            result[i] = new User(i,(String)l.get(i).property("username").value(),(String)l.get(i).property("email").value());
+            result[i] = new User(i,(String)l.get(i).property("username").value(),(String)l.get(i).property("email").value(),null);
         }
         return result;
     }
 
-    @RequestMapping(value = "/user/{id}/fantateam", method = RequestMethod.POST)
-    public FantaTeam createFantaTeam(@PathVariable long id, @RequestParam(value="teamName",required = true) String teamName){
-        System.out.println(id + " " + teamName);
-        FantaTeam result = new FantaTeam(1,teamName,0,0,"","",id);
+    @RequestMapping(value = "/user/", method = RequestMethod.POST)
+    public User createUser(@RequestParam(value="username") String username, @RequestParam(value="email", required = true) String email){
+        long newId = this.g.V().hasLabel("fantateam").count().next() + 1; //provvisorio
+        Vertex v = this.g.addV("user").property("username",username).property("user id", newId).property("email",email).next();
+        this.g.tx().commit();
+        User result = new User(newId,username,email,null);
         return result;
     }
+
+
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
+    public User getUserById(@PathVariable long id){
+        Vertex user = this.g.V().has("user id", id).next();
+        List<Object> t = this.g.V(user).out("fanta owns").values("fantateam id").toList();
+
+        String username = (String)user.property("username").value();
+        String email = (String)user.property("email").value();
+
+        FantaTeamController fc = new FantaTeamController();
+        FantaTeam[] teams = new FantaTeam[t.size()];
+
+        for(int i = 0; i < t.size(); i++){
+            teams[i] = fc.getFantaTeamById(Long.parseLong(String.valueOf(t.get(i))));
+        }
+        User result = new User(id,username,email, teams);
+        return result;
+    }
+
 }

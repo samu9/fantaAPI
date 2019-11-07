@@ -14,6 +14,7 @@ public class Player {
     private final String mainFoot;
     private final String teamName;
     private final String prosecutorName;
+    private final long prosecutorId;
     private final PlayerStats[] stats;
     private final long quot;
     private final String img;
@@ -31,6 +32,7 @@ public class Player {
                   long quot,
                   String teamName,
                   String prosecutorName,
+                  long prosecutorId,
                   String img) {
         this.id = id;
         this.name = name;
@@ -44,6 +46,7 @@ public class Player {
         this.quot = quot;
         this.teamName = teamName;
         this.prosecutorName = prosecutorName;
+        this.prosecutorId = prosecutorId;
         this.img = img;
     }
 
@@ -93,6 +96,10 @@ public class Player {
 
     public String getProsecutorName() {
         return prosecutorName;
+    }
+
+    public long getProsecutorId() {
+        return prosecutorId;
     }
 
     public String getImg() {

@@ -1,6 +1,9 @@
 Fanta\Player.class
 Fanta\User.class
+Fanta\FantaTeamController.class
 Fanta\CoachController.class
+Fanta\President.class
+Fanta\Stadium.class
 Fanta\PlayerController.class
 Fanta\Team.class
 Fanta\App.class
@@ -9,5 +12,7 @@ Fanta\PlayerStats.class
 Fanta\TeamController.class
 Fanta\Coach.class
 Fanta\UserController.class
+Fanta\StadiumController.class
 Fanta\Prova.class
 Fanta\FantaTeam.class
+Fanta\PresidentController.class

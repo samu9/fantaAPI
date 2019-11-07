@@ -23,9 +23,8 @@ public class PlayerController {
         this.g = graph.traversal();
     }
 
-    @RequestMapping(value = "/player", method = RequestMethod.GET)
+    @RequestMapping(value = "/player/", method = RequestMethod.GET)
     public Player[] getAllPlayers(){
-
         List<Object> list = this.g.V().has("player id").order().by("name").values("player id").toList();
         Player[] allPlayers = new Player[list.size()];
         for(int i = 0; i < list.size(); i++){
@@ -36,8 +35,7 @@ public class PlayerController {
 
 
     @RequestMapping(value = "/player/{id}", method = RequestMethod.GET)
-    public Player getPlayerById(@PathVariable long id, @RequestParam(required = false) boolean fullInfo) throws IllegalStateException {
-
+    public Player getPlayerById(@PathVariable long id, @RequestParam(required = false) boolean showStats) throws IllegalStateException {
         Path p = this.g.V().has("player id", id).as("player")
                 .out("plays for").as("team")
                 .in("plays for").has("player id",id).out("is assisted by").as("prosecutor")
@@ -48,7 +46,7 @@ public class PlayerController {
         Vertex prosecutor = p.get("prosecutor");
 
         PlayerStats[] stats;
-        if(!fullInfo){
+        if(!showStats){
             stats = null;
         } else {
             List<Vertex> statList = this.g.V().has("player id", id).out("stats").toList();
@@ -85,6 +83,7 @@ public class PlayerController {
         }
         String teamName = (String)team.property("name").value();
         String prosecutorName = (String)prosecutor.property("name").value();
-        return new Player(id,name,birthplace,birthdate,age,height,position,mainfoot,stats, quot, teamName, prosecutorName,img);
+        long prosecutorId = Long.parseLong(String.valueOf(prosecutor.property("prosecutor id").value()));
+        return new Player(id,name,birthplace,birthdate,age,height,position,mainfoot,stats, quot, teamName, prosecutorName,prosecutorId,img);
     }
 }
