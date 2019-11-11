@@ -34,7 +34,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
     public User createUser(@RequestParam(value="username") String username, @RequestParam(value="email", required = true) String email){
-        long newId = this.g.V().hasLabel("fantateam").count().next() + 1; //provvisorio
+        long newId = this.g.V().hasLabel("user").count().next() + 1; //provvisorio
         Vertex v = this.g.addV("user").property("username",username).property("user id", newId).property("email",email).next();
         this.g.tx().commit();
         User result = new User(newId,username,email,null);

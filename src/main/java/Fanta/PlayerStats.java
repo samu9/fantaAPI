@@ -12,9 +12,22 @@ public class PlayerStats {
     private long yellowCards;
     private double average;
     private double fantaAverage;
-    private double variance;
+    private double avgGaussianRating;
+    private double avgGaussianFantaRating;
 
-    public PlayerStats(String season, String team, long playedMatches, long goals, long assists, long concededGoals, long ownGoals, long redCards, long yellowCards, double average, double fantamedia, double variance){
+    public PlayerStats(String season,
+                       String team,
+                       long playedMatches,
+                       long goals,
+                       long assists,
+                       long concededGoals,
+                       long ownGoals,
+                       long redCards,
+                       long yellowCards,
+                       double average,
+                       double fantamedia,
+                       double avgGaussianRating,
+                       double avgGaussianFantaRating){
         this.season = season;
         this.team = team;
         this.playedMatches = playedMatches;
@@ -26,7 +39,8 @@ public class PlayerStats {
         this.yellowCards = yellowCards;
         this.average = average;
         this.fantaAverage = fantamedia;
-        this.variance = variance;
+        this.avgGaussianRating = avgGaussianRating;
+        this.avgGaussianFantaRating = avgGaussianFantaRating;
     }
 
     public String getSeason() {
@@ -73,7 +87,11 @@ public class PlayerStats {
         return fantaAverage;
     }
 
-    public double getVariance() {
-        return variance;
+    public double getAvgGaussianRating() {
+        return avgGaussianRating;
+    }
+
+    public double getAvgGaussianFantaRating() {
+        return avgGaussianFantaRating;
     }
 }

@@ -50,4 +50,19 @@ public class ProsecutorController {
         Prosecutor result = new Prosecutor(id,name,playerName,playerId);
         return result;
     }
+
+    @RequestMapping(value = "/prosecutor/{id}/player/", method = RequestMethod.GET)
+    public Player[] getAssistedPlayers(@PathVariable long id){
+        PlayerController pc = new PlayerController();
+        List<Object> list = this.g.V().has("prosecutor id", id).in("is assisted by").values("player id").toList();
+
+        Player[] result = new Player[list.size()];
+        for(int i = 0; i < list.size(); i++){
+            result[i] = pc.getPlayerById(Long.parseLong(String.valueOf(list.get(i))),true);
+        }
+
+        return result;
+
+    }
+
 }

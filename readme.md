@@ -1,5 +1,9 @@
 # FantaAPI
+### Build and run
+`mvn clean package spring-boot:run`
 
+
+### Endpoints
 ##### fantateam/
 - **GET**: restituisce tutti i fantateam di tutti gli utenti
 - **DELETE**: elimina tutti i fantateam di tutti gli utenti
@@ -25,3 +29,22 @@
 
 ##### stadium/
 ##### stadium/{id}
+
+##### prosecutor/
+##### prosecutor/{id}
+##### prosecutor/{id}/player
+- **GET**: restituisce la lista dei giocatori seguiti dal prosecutor
+
+
+### TODO
+- Prosecutor: il campo playerId dovrebbe essere una lista?
+- Fantateam: possibilità di rimuovere i giocatori
+- Convenzione: tutti i path devono terminare con " */* "?
+
+### FATTO
+- Sistemati indici incrementali per *user* e *fantateam*
+- PlayerStats: Aggiunti i valori *average gaussian rating*, *average gaussian fanta rating*, e *season team*
+- Fantateam: non è più possibile aggiungere più volte lo stesso giocatore per lo stesso fantateam
+- Player: aggiunti *teamId* e *nationality*
+- Coach: aggiunto *module*
+- Prosecutor: aggiunto il path */prosecutor/{id}/player/* che permette di ottenere tutti i giocatori seguiti dal prosecutor

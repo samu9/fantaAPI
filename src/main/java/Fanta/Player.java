@@ -8,11 +8,13 @@ public class Player {
     private final String name;
     private final String birthplace;
     private final LocalDate birthdate;
+    private final String nationality;
     private final long age; //long per janusgraph
     private final String height;
     private final String position;
     private final String mainFoot;
     private final String teamName;
+    private final long teamId;
     private final String prosecutorName;
     private final long prosecutorId;
     private final PlayerStats[] stats;
@@ -24,6 +26,7 @@ public class Player {
                   String name,
                   String birthplace,
                   LocalDate birthdate,
+                  String nationality,
                   long age,
                   String height,
                   String position,
@@ -31,6 +34,7 @@ public class Player {
                   PlayerStats[] stats,
                   long quot,
                   String teamName,
+                  long teamId,
                   String prosecutorName,
                   long prosecutorId,
                   String img) {
@@ -38,6 +42,7 @@ public class Player {
         this.name = name;
         this.birthplace = birthplace;
         this.birthdate = birthdate;
+        this.nationality = nationality;
         this.age = age;
         this.height = height;
         this.position = position;
@@ -45,6 +50,7 @@ public class Player {
         this.stats = stats;
         this.quot = quot;
         this.teamName = teamName;
+        this.teamId = teamId;
         this.prosecutorName = prosecutorName;
         this.prosecutorId = prosecutorId;
         this.img = img;
@@ -64,6 +70,10 @@ public class Player {
 
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    public String getNationality() {
+        return nationality;
     }
 
     public long getAge() {
@@ -92,6 +102,10 @@ public class Player {
 
     public String getTeamName() {
         return teamName;
+    }
+
+    public long getTeamId() {
+        return teamId;
     }
 
     public String getProsecutorName() {

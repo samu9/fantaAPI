@@ -51,10 +51,11 @@ public class CoachController {
 
         String birthplace = (String)coach.property("birthplace").value();
         String nationality = (String)coach.property("nationality").value();
+        String module = (String)coach.property("module").value();
         String teamName = (String)team.property("name").value();
         long teamId = Long.parseLong(String.valueOf(team.property("team id").value()));
 
-        Coach result = new Coach(id,name,birthdate,birthplace,nationality,teamName, teamId);
+        Coach result = new Coach(id,name,birthdate,birthplace,nationality,module,teamName, teamId);
         return result;
     }
 }

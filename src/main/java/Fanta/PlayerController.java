@@ -54,6 +54,7 @@ public class PlayerController {
             for (int i = 0; i < statList.size(); i++) {
                 Vertex v = statList.get(i);
                 String year = (String) v.property("year").value();
+                String seasonTeam = (String)this.g.V(v).out("stats").next().property("name").value();
                 long playedMatches = Long.parseLong(String.valueOf(v.property("played matches").value()));
                 long goals = Long.parseLong(String.valueOf(v.property("scored goals").value()));
                 long assists = Long.parseLong(String.valueOf(v.property("assists").value()));
@@ -63,13 +64,16 @@ public class PlayerController {
                 long yellowCards = Long.parseLong(String.valueOf(v.property("yellow cards").value()));
                 double average = Double.parseDouble(String.valueOf(v.property("average").value()));
                 double fantaAverage = Double.parseDouble(String.valueOf(v.property("fanta average").value()));
-                stats[i] = new PlayerStats(year, "Team", playedMatches, goals, assists, concededGoals, ownGoals, redCards, yellowCards, average, fantaAverage, 0);
+                double avgGaussianRating = Double.parseDouble(String.valueOf(v.property("gauss average").value()));
+                double avgGaussianFantaRating = Double.parseDouble(String.valueOf(v.property("gauss fanta average").value()));
+                stats[i] = new PlayerStats(year, seasonTeam, playedMatches, goals, assists, concededGoals, ownGoals, redCards, yellowCards, average, fantaAverage,avgGaussianRating,avgGaussianFantaRating);
             }
         }
 
         String name = (String)player.property("name").value();
         String birthplace = (String)player.property("birthplace").value();
         LocalDate birthdate = LocalDate.parse((String)player.property("birthdate").value());
+        String nationality = (String)player.property("nationality").value();
         long age = YEARS.between(birthdate, today);
         String height = (String)player.property("height").value();
         String position = (String)player.property("role").value();
@@ -82,8 +86,9 @@ public class PlayerController {
             System.out.println("Error id: " + id);
         }
         String teamName = (String)team.property("name").value();
+        long teamId = Long.parseLong(String.valueOf(team.property("team id").value()));
         String prosecutorName = (String)prosecutor.property("name").value();
         long prosecutorId = Long.parseLong(String.valueOf(prosecutor.property("prosecutor id").value()));
-        return new Player(id,name,birthplace,birthdate,age,height,position,mainfoot,stats, quot, teamName, prosecutorName,prosecutorId,img);
+        return new Player(id,name,birthplace,birthdate,nationality,age,height,position,mainfoot,stats, quot, teamName, teamId, prosecutorName,prosecutorId,img);
     }
 }
