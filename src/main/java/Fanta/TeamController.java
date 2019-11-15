@@ -26,7 +26,7 @@ public class TeamController {
         this.g = graph.traversal();
     }
 
-    @RequestMapping(value = "/team", method = RequestMethod.GET)
+    @RequestMapping(value = "/team/", method = RequestMethod.GET)
     public Team[] getAllTeams() throws java.io.IOException {
         List<Object> list = this.g.V().has("team id").order().by("name").values("team id").toList();
 

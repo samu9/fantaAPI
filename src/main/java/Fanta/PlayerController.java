@@ -54,7 +54,12 @@ public class PlayerController {
             for (int i = 0; i < statList.size(); i++) {
                 Vertex v = statList.get(i);
                 String year = (String) v.property("year").value();
-                String seasonTeam = (String)this.g.V(v).out("stats").next().property("name").value();
+                String seasonTeam = "";
+                try {
+                    seasonTeam = (String) this.g.V(v).out("stats").next().property("name").value();
+                } catch (Exception e){
+                    seasonTeam = (String) v.property("team").value();
+                }
                 long playedMatches = Long.parseLong(String.valueOf(v.property("played matches").value()));
                 long goals = Long.parseLong(String.valueOf(v.property("scored goals").value()));
                 long assists = Long.parseLong(String.valueOf(v.property("assists").value()));

@@ -1,6 +1,7 @@
 package Fanta;
 
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.JanusGraph;
@@ -18,7 +19,8 @@ public class FantaTeamController{
     private final GraphTraversalSource g;
 
     public FantaTeamController(){
-        this.graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
+
+        this.graph = App.graph;
         this.g = graph.traversal();
     }
 
@@ -33,8 +35,8 @@ public class FantaTeamController{
         }
         return result;
     }
-    @RequestMapping(value = "/fantateam/", method = RequestMethod.POST)
-    public boolean createFantaTeam(@RequestParam(value="name",required = true) String name, @RequestParam(value="userId") long userId ){
+    @RequestMapping(value = "/fantateam", method = RequestMethod.POST)
+    public long createFantaTeam(@RequestParam(value="name",required = true) String name, @RequestParam(value="userId") long userId ){
         Vertex user = this.g.V().has("user id", userId).next();
         boolean check = this.g.V(user).out("fanta owns").has("name", name).hasNext();
 
@@ -43,9 +45,9 @@ public class FantaTeamController{
             Vertex team = this.g.addV("fantateam").property("fantateam id", newId).property("name", name).next();
             g.V(user).as("a").V(team).addE("fanta owns").from("a").next();
             this.g.tx().commit();
-            return true;
+            return newId;
         }
-        else return false;
+        else return -1;
     }
     @RequestMapping(value = "/fantateam/", method = RequestMethod.DELETE)
     public boolean deleteFantaTeam(){
@@ -83,7 +85,7 @@ public class FantaTeamController{
         return result;
     }
 
-    @RequestMapping(value = "/fantateam/{teamId}/player", method = RequestMethod.GET)
+    @RequestMapping(value = "/fantateam/{teamId}/player/", method = RequestMethod.GET)
     public Player[] getPlayers(@PathVariable long teamId ){
         Vertex team = this.g.V().has("fantateam id", teamId).next();
         List<Object> list = this.g.V(team).in("fanta plays for").values("player id").toList();
@@ -112,8 +114,7 @@ public class FantaTeamController{
 
     @RequestMapping(value = "/fantateam/{teamId}/player/{playerId}", method = RequestMethod.DELETE)
     public boolean removePlayer(@PathVariable String playerId, @PathVariable long teamId ) throws java.io.IOException {
-        Vertex player = this.g.V().has("player id", playerId).next();
-        this.g.V(player).out("fanta plays for").as("e").in("fanta plays for").has("fantateam id", teamId).select("e").drop();
+        GraphTraversal<Vertex, Object> e = this.g.V().has("player id",playerId).outE().as("e").inV().has("fantateam id", teamId).select("e").drop().iterate();
         this.g.tx().commit();
 
         return true;
