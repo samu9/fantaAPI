@@ -1,4 +1,4 @@
-package Fanta;
+package Models;
 
 public class Prosecutor {
     private final long id;

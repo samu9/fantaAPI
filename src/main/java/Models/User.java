@@ -1,6 +1,6 @@
-package Fanta;
+package Models;
 
-import java.util.List;
+import Models.FantaTeam;
 
 public class User {
     private final long id;

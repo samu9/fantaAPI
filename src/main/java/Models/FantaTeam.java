@@ -1,4 +1,4 @@
-package Fanta;
+package Models;
 
 public class FantaTeam{
     private final long id;

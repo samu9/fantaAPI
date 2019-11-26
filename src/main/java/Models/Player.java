@@ -1,4 +1,4 @@
-package Fanta;
+package Models;
 
 
 import java.time.LocalDate;

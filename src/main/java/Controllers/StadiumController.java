@@ -1,27 +1,24 @@
-package Fanta;
+package Controllers;
 
 
+import Mappers.StadiumMapper;
+import Models.Stadium;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.janusgraph.core.JanusGraph;
-import org.janusgraph.core.JanusGraphFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-public class StadiumController {
-    private final JanusGraph graph;
-    private final GraphTraversalSource g;
+public class StadiumController extends Controller{
+
+    private StadiumMapper mapper = new StadiumMapper();
 
     public StadiumController(){
-        this.graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
-        this.g = graph.traversal();
+
     }
 
     @RequestMapping(value = "/stadium/", method = RequestMethod.GET)
@@ -42,15 +39,6 @@ public class StadiumController {
         Vertex stadium = p.get("stadium");
         Vertex team = p.get("team");
 
-        String name = (String)stadium.property("name").value();
-
-        String city = (String)stadium.property("city").value();
-        long capacity = Long.parseLong(String.valueOf(stadium.property("capacity").value()));
-        String img = (String)stadium.property("img").value();
-        String teamName = (String)team.property("name").value();
-        long teamId = Long.parseLong(String.valueOf(team.property("team id").value()));
-
-        Stadium result = new Stadium(id,name,city,capacity,img,teamName,teamId);
-        return result;
+        return mapper.VertexToEntity(stadium,team);
     }
 }

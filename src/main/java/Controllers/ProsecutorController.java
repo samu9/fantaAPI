@@ -1,11 +1,10 @@
-package Fanta;
+package Controllers;
 
-
+import Mappers.ProsecutorMapper;
+import Models.Player;
+import Models.Prosecutor;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
-import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.janusgraph.core.JanusGraph;
-import org.janusgraph.core.JanusGraphFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,13 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class ProsecutorController {
-    private final JanusGraph graph;
-    private final GraphTraversalSource g;
+public class ProsecutorController extends Controller {
+    private ProsecutorMapper mapper = new ProsecutorMapper();
 
     public ProsecutorController(){
-        this.graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
-        this.g = graph.traversal();
+
     }
 
     @RequestMapping(value = "/prosecutor/", method = RequestMethod.GET)
@@ -41,14 +38,7 @@ public class ProsecutorController {
         Vertex prosecutor = p.get("prosecutor");
         Vertex player = p.get("player");
 
-        String name = (String)prosecutor.property("name").value();
-
-
-        String playerName = (String)player.property("name").value();
-        long playerId = Long.parseLong(String.valueOf(player.property("player id").value()));
-
-        Prosecutor result = new Prosecutor(id,name,playerName,playerId);
-        return result;
+        return mapper.VertexToEntity(prosecutor, player);
     }
 
     @RequestMapping(value = "/prosecutor/{id}/player/", method = RequestMethod.GET)

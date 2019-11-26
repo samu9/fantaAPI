@@ -1,27 +1,26 @@
-package Fanta;
+package Models;
+
+
 
 import java.time.LocalDate;
 
-public class Coach {
+public class President {
     private final long id;
     private final String name;
     private final LocalDate birthdate;
     private final String birthplace;
     private final String nationality;
-    private final String module;
-    private final String teamName;
-    private final long teamId;
+    private final String ownedTeamName;
+    private final long ownedTeamId;
 
-    public Coach(long id, String name, LocalDate birthdate, String birthplace, String nationality, String module, String teamName, long teamId){
+    public President(long id, String name, LocalDate birthdate, String birthplace, String nationality, String ownedTeamName, long ownedTeamId){
         this.id = id;
         this.name = name;
         this.birthdate = birthdate;
         this.birthplace = birthplace;
         this.nationality = nationality;
-        this.module = module;
-        this.teamName = teamName;
-        this.teamId = teamId;
-
+        this.ownedTeamName = ownedTeamName;
+        this.ownedTeamId = ownedTeamId;
     }
 
     public long getId() {
@@ -44,15 +43,11 @@ public class Coach {
         return nationality;
     }
 
-    public String getModule() {
-        return module;
+    public String getOwnedTeamName() {
+        return ownedTeamName;
     }
 
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public long getTeamId() {
-        return teamId;
+    public long getOwnedTeamId() {
+        return ownedTeamId;
     }
 }

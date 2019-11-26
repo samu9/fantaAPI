@@ -1,4 +1,4 @@
-package Fanta;
+package Models;
 
 public class Stadium {
     private final long id;

@@ -1,5 +1,6 @@
 package Fanta;
 
+import DAOs.BaseDAO;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -21,21 +22,14 @@ public class Prova {
         GraphTraversalSource g = graph.traversal();
         final JanusGraphManagement management = graph.openManagement();
 
+        BaseDAO dao = new BaseDAO();
 
-        g.addV("user").property("user id", 1).property("username","samu").property("password","xxx").property("email","samu@gmail.com").next();
-        g.tx().commit();
-//        g.tx().rollback();
-//        g.V().has("user id","5").drop().iterate();
-//        g.tx().commit();
+        GraphTraversal<Vertex, Vertex> x  = dao.getTraversalByProp("player id");
 
-        List<Vertex> l = g.V().has("user id").toList();
-        for(Vertex v : l){
-            System.out.println(v.property("user id").value() + " - " + v.property("username").value());
+        GraphTraversal<Vertex, Vertex> y = dao.orderBy(x,"name");
 
-        }
-        System.out.println(l.size());
-        g.tx().rollback();
+        System.out.println(y.next().property("name").value());
 
-        graph.close();
+        dao.close();
     }
 }

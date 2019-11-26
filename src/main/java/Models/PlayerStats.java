@@ -1,4 +1,4 @@
-package Fanta;
+package Models;
 
 public class PlayerStats {
     private String season;
