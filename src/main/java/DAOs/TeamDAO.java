@@ -23,8 +23,10 @@ public class TeamDAO extends BaseDAO{
                 .property("team id", id).next();
     }
 
-    public boolean addPlayerToTeam(Vertex team, Vertex player){
-        this.g.V(player).as("a").V(team).addE("plays for").from("a").next();
+
+
+    public boolean addStadiumToTeam(Vertex team,Vertex stadium){
+        this.addEdge(team,stadium,"plays in");
         return true;
     }
 }

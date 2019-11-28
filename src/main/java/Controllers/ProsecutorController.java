@@ -1,9 +1,9 @@
 package Controllers;
 
+import DAOs.ProsecutorDAO;
 import Mappers.ProsecutorMapper;
 import Models.Player;
 import Models.Prosecutor;
-import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,16 +14,14 @@ import java.util.List;
 
 @RestController
 public class ProsecutorController extends Controller {
+
     private ProsecutorMapper mapper = new ProsecutorMapper();
+    private ProsecutorDAO dao = new ProsecutorDAO();
 
-    public ProsecutorController(){
-
-    }
 
     @RequestMapping(value = "/prosecutor/", method = RequestMethod.GET)
     public Prosecutor[] getAllStadiums(){
-        List<Object> list = this.g.V().hasLabel("prosecutor").order().by("name").values("prosecutor id").toList();
-
+        List<Object> list = dao.getIdList("prosecutor id");
         Prosecutor[] result = new Prosecutor[list.size()];
 
         for(int i = 0; i < list.size(); i++){
@@ -34,25 +32,17 @@ public class ProsecutorController extends Controller {
 
     @RequestMapping(value = "/prosecutor/{id}", method = RequestMethod.GET)
     public Prosecutor getStadiumById(@PathVariable long id){
-        Path p = this.g.V().has("prosecutor id", id).as("prosecutor").in("is assisted by").as("player").path().next();
-        Vertex prosecutor = p.get("prosecutor");
-        Vertex player = p.get("player");
+        Vertex prosecutor = dao.getVertexById("prosecutor id", id);
 
-        return mapper.VertexToEntity(prosecutor, player);
+        return mapper.VertexToEntity(prosecutor);
     }
 
     @RequestMapping(value = "/prosecutor/{id}/player/", method = RequestMethod.GET)
     public Player[] getAssistedPlayers(@PathVariable long id){
-        PlayerController pc = new PlayerController();
-        List<Object> list = this.g.V().has("prosecutor id", id).in("is assisted by").values("player id").toList();
+        PlayerController playerController = new PlayerController();
+        List<Object> list = dao.getListInValues(id, "prosecutor id","is assisted by", "player id");
 
-        Player[] result = new Player[list.size()];
-        for(int i = 0; i < list.size(); i++){
-            result[i] = pc.getPlayerById(Long.parseLong(String.valueOf(list.get(i))),true);
-        }
-
-        return result;
-
+        return playerController.getPlayersByIdList(list);
     }
 
 }

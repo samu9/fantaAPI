@@ -9,7 +9,7 @@ public class UserDAO extends BaseDAO {
     public long getNewUserId(){ return super.getNewId("user"); }
 
     public List<Object> getIdList(){
-        return super.getIdList("user id");
+        return getTraversalByProp("user id").order().by("username").values("user id").toList();
     }
 
     public Vertex addUser(String username, String email){

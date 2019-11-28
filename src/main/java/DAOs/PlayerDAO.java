@@ -27,8 +27,18 @@ public class PlayerDAO extends BaseDAO {
                 .property("quot", quot).property("birthplace", birthplace).next();
     }
 
+    public boolean addTeamToPlayer(Vertex player, Vertex team){
+        return this.addEdge(player,team,"plays for");
+    }
+    public boolean addTeamToPlayer(long playerId, long teamId){
+        return this.addEdge(playerId,"player id",teamId,"team id","plays for");
+    }
+
     public boolean addStatsToPlayer(Vertex player, Vertex stats){
-        this.g.V(player).as("a").V(stats).addE("stats").from("a").next();
-        return true;
+        return this.addEdge(player,stats,"stats");
+    }
+
+    public boolean addProsecutorToPlayer(Vertex player, Vertex prosecutor){
+        return this.addEdge(player,prosecutor,"is assisted by");
     }
 }

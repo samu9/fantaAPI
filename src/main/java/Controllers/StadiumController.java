@@ -1,6 +1,7 @@
 package Controllers;
 
 
+import DAOs.StadiumDAO;
 import Mappers.StadiumMapper;
 import Models.Stadium;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
@@ -15,15 +16,13 @@ import java.util.List;
 @RestController
 public class StadiumController extends Controller{
 
+    private StadiumDAO dao = new StadiumDAO();
     private StadiumMapper mapper = new StadiumMapper();
 
-    public StadiumController(){
-
-    }
 
     @RequestMapping(value = "/stadium/", method = RequestMethod.GET)
     public Stadium[] getAllStadiums(){
-        List<Object> list = this.g.V().hasLabel("stadium").order().by("name").values("stadium id").toList();
+        List<Object> list = dao.getIdList("stadium id");
 
         Stadium[] result = new Stadium[list.size()];
 
@@ -35,7 +34,7 @@ public class StadiumController extends Controller{
 
     @RequestMapping(value = "/stadium/{id}", method = RequestMethod.GET)
     public Stadium getStadiumById(@PathVariable long id){
-        Path p = this.g.V().has("stadium id", id).as("stadium").in("plays in").as("team").path().next();
+        Path p = dao.getStadiumPathById(id);
         Vertex stadium = p.get("stadium");
         Vertex team = p.get("team");
 

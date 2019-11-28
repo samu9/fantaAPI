@@ -15,17 +15,18 @@ public class PlayerController extends Controller{
     PlayerMapper mapper = new PlayerMapper();
     PlayerDAO dao = new PlayerDAO();
 
-    public PlayerController() {
+    public Player[] getPlayersByIdList(List<Object> list){
+        Player[] result = new Player[list.size()];
+        for(int i = 0; i < list.size(); i++){
+            result[i] = getPlayerById(Long.parseLong(String.valueOf(list.get(i))),false);
+        }
+        return result;
     }
 
     @RequestMapping(value = "/player/", method = RequestMethod.GET)
-    public Player[] getAllPlayers(){
+    public Player[] getAllPlayers(@RequestParam(required = false) boolean showStats){
         List<Object> list = dao.getIdList();
-        Player[] allPlayers = new Player[list.size()];
-        for(int i = 0; i < list.size(); i++){
-            allPlayers[i] = getPlayerById(Long.parseLong(String.valueOf(list.get(i))),false);
-        }
-        return allPlayers;
+        return getPlayersByIdList(list);
     }
 
 

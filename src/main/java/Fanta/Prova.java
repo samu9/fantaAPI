@@ -1,6 +1,9 @@
 package Fanta;
 
 import DAOs.BaseDAO;
+import DAOs.PlayerDAO;
+import DAOs.TeamDAO;
+import Mappers.PlayerMapper;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -20,16 +23,23 @@ public class Prova {
 
         JanusGraph graph = JanusGraphFactory.open("conf/janusgraph-cassandra-elasticsearch.properties");
         GraphTraversalSource g = graph.traversal();
-        final JanusGraphManagement management = graph.openManagement();
 
-        BaseDAO dao = new BaseDAO();
 
-        GraphTraversal<Vertex, Vertex> x  = dao.getTraversalByProp("player id");
+        PlayerDAO dao = new PlayerDAO();
+        PlayerMapper mapper = new PlayerMapper();
 
-        GraphTraversal<Vertex, Vertex> y = dao.orderBy(x,"name");
 
-        System.out.println(y.next().property("name").value());
 
+
+
+
+
+//        if(teamDao.addPlayerToTeam(team,player)){
+//            System.out.println("---------------------");
+//        }
+//        dao.commit();
+
+        graph.close();
         dao.close();
     }
 }

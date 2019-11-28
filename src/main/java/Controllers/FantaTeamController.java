@@ -13,8 +13,9 @@ import java.util.List;
 
 @RestController
 public class FantaTeamController extends Controller{
-    FantaTeamMapper mapper = new FantaTeamMapper();
-    FantaTeamDAO dao = new FantaTeamDAO();
+
+    private FantaTeamMapper mapper = new FantaTeamMapper();
+    private FantaTeamDAO dao = new FantaTeamDAO();
 
 
     public FantaTeam[] getFantaTeamsByIdList(List<Object> list){
@@ -48,8 +49,8 @@ public class FantaTeamController extends Controller{
 
     @RequestMapping(value = "/fantateam/", method = RequestMethod.DELETE)
     public boolean deleteFantaTeam(){
-        this.g.V().has("fantateam id").drop().iterate();
-        this.g.tx().commit();
+        dao.removeAllFantaTeams();
+        dao.commit();
         return true;
     }
 
@@ -61,6 +62,13 @@ public class FantaTeamController extends Controller{
         List<Object> list = dao.getListInValues(team,"fanta plays for", "birthdate");
 
         return mapper.VertexToFantaTeam(team,user,list);
+    }
+
+    @RequestMapping(value = "/fantateam/{id}", method = RequestMethod.DELETE)
+    public boolean deleteFantaTeamById(@PathVariable long id ){
+        dao.removeFantaTeam(id);
+        dao.commit();
+        return true;
     }
 
 

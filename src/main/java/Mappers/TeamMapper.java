@@ -28,7 +28,7 @@ public class TeamMapper extends Mapper {
         String name = this.mapName(team);
         long players = playersBirthdate.size();
         double avgAge = getAvgAge(playersBirthdate);
-        String logo = this.mapImg(team);
+        String logo = this.mapString(team,"logo");
         String coachName = this.mapName(coach);
         long coachId = this.mapLong(coach, "coach id");
         String presidentName = this.mapName(president);

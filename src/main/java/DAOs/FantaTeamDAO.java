@@ -24,7 +24,7 @@ public class FantaTeamDAO extends BaseDAO {
         if (!check) {
             long newId = this.getNewId("fantateam");
             Vertex team = this.g.addV("fantateam").property("fantateam id", newId).property("name", name).next();
-            g.V(user).as("a").V(team).addE("fanta owns").from("a").next();
+            this.addEdge(user,team,"fanta owns");
             return team;
         } else throw new Exception();
     }
@@ -39,6 +39,16 @@ public class FantaTeamDAO extends BaseDAO {
             return true;
         }
         else return false;
+    }
+
+    public boolean removeFantaTeam(long teamId){
+        this.g.V().has("fantateam id", teamId).drop().iterate();
+        return true;
+    }
+
+    public boolean removeAllFantaTeams(){
+        this.g.V().has("fantateam id").drop().iterate();
+        return true;
     }
 
     public boolean removePlayerFromFantaTeam(long teamId, long playerId){

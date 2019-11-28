@@ -13,7 +13,7 @@
 - **DELETE**: elimina il fantateam
 ##### fantateam/{id}/player
 - **GET**: restituisce tutti player di un certo fantateam
-- **POST**: {*playerId*,*teamId*} - aggiunge il player al fantateam
+- **POST**: {*playerId*,*teamId*} - aggiunge il player al fantateam **("/" finale)**
 - **DELETE**: {*playerId*,*teamId*} - rimuove il player dal fantateam
 
 ##### user/
