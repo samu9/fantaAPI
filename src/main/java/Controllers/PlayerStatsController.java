@@ -32,6 +32,7 @@ public class PlayerStatsController extends Controller {
             }
             result[i] = mapper.VertexToStats(list.get(i), team);
         }
+        dao.commit();
         return result;
     }
 }

@@ -58,13 +58,11 @@ public class BaseDAO {
 
     public boolean addEdge(Vertex from, Vertex to, String edgeLabel){
         this.g.V(from).as("a").V(to).addE(edgeLabel).from("a").next();
-        commit();
         return true;
     }
 
     public boolean addEdge(long idFrom, String idPropertyFrom, long idTo, String idPropertyTo, String edgeLabel){
         this.g.V().has(idPropertyTo,idTo).as("a").V().has(idPropertyFrom,idFrom).addE(edgeLabel).to("a");
-        commit();
         return true;
     }
 

@@ -20,6 +20,7 @@ public class PlayerController extends Controller{
         for(int i = 0; i < list.size(); i++){
             result[i] = getPlayerById(Long.parseLong(String.valueOf(list.get(i))),false);
         }
+        dao.commit();
         return result;
     }
 
@@ -33,7 +34,7 @@ public class PlayerController extends Controller{
     @RequestMapping(value = "/player/{id}", method = RequestMethod.GET)
     public Player getPlayerById(@PathVariable long id, @RequestParam(required = false) boolean showStats) throws IllegalStateException {
         Path p = dao.getPlayerPathById(id);
-
+        dao.commit();
         Vertex player = p.get("player");
         Vertex team = p.get("team");
         Vertex prosecutor = p.get("prosecutor");

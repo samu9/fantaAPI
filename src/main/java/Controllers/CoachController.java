@@ -1,5 +1,6 @@
 package Controllers;
 
+import DAOs.CoachDAO;
 import Mappers.CoachMapper;
 import Models.Coach;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
@@ -16,25 +17,27 @@ import java.util.List;
 public class CoachController extends Controller {
 
     private CoachMapper mapper = new CoachMapper();
+    private CoachDAO dao = new CoachDAO();
 
     public CoachController(){
     }
 
     @RequestMapping(value = "/coach/", method = RequestMethod.GET)
     public Coach[] getAllCoaches(){
-        List<Object> list = this.g.V().has("coach id").order().by("name").values("coach id").toList();
+        List<Object> list = dao.getIdList("coach id");
 
         Coach[] allCoaches = new Coach[list.size()];
         for(int i = 0; i < list.size(); i++){
             allCoaches[i] = getCoachById(Long.parseLong(String.valueOf(list.get(i))));
         }
+        dao.commit();
         return allCoaches;
     }
 
     @RequestMapping(value = "/coach/{id}", method = RequestMethod.GET)
     public  Coach getCoachById(@PathVariable long id){
-        Path p = this.g.V().has("coach id", id).as("coach")
-                .out("trains").as("team").path().next();
+        Path p = dao.getCoachPathById(id);
+        dao.commit();
 
         Vertex coach = p.get("coach");
         Vertex team = p.get("team");

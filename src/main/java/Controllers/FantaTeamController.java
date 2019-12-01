@@ -24,13 +24,14 @@ public class FantaTeamController extends Controller{
         for(int i = 0; i < list.size(); i++){
             result[i] = this.getFantaTeamById(Long.parseLong(String.valueOf(list.get(i))));
         }
+        dao.commit();
         return result;
     }
 
     @RequestMapping(value = "/fantateam/", method = RequestMethod.GET)
     public FantaTeam[] getAllFantaTeams(){
         List<Object> list = dao.getIdList();
-
+        dao.commit();
         return getFantaTeamsByIdList(list);
     }
 
@@ -57,6 +58,7 @@ public class FantaTeamController extends Controller{
     @RequestMapping(value = "/fantateam/{id}", method = RequestMethod.GET)
     public FantaTeam getFantaTeamById(@PathVariable long id ){
         Path p = dao.getFantaTeamPathById(id);
+        dao.commit();
         Vertex team = p.get("team");
         Vertex user = p.get("user");
         List<Object> list = dao.getListInValues(team,"fanta plays for", "birthdate");
@@ -75,7 +77,7 @@ public class FantaTeamController extends Controller{
     @RequestMapping(value = "/fantateam/{teamId}/player/", method = RequestMethod.GET)
     public Player[] getPlayers(@PathVariable long teamId ){
         List<Object> list = dao.getPlayersIdList(teamId);
-
+        dao.commit();
         PlayerController pc = new PlayerController();
         Player[] result = new Player[list.size()];
         for(int i = 0; i < list.size(); i++){

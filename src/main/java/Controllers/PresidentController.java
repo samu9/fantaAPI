@@ -5,12 +5,8 @@ import Mappers.PresidentMapper;
 import Models.President;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,6 +24,7 @@ public class PresidentController extends Controller {
         for(int i = 0; i < list.size(); i++){
             result[i] = this.getPresidentById(Long.parseLong(String.valueOf(list.get(i))));
         }
+        dao.commit();
         return result;
     }
 
