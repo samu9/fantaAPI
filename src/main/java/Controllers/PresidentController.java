@@ -7,24 +7,24 @@ import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class PresidentController extends Controller {
     PresidentMapper mapper = new PresidentMapper();
     PresidentDAO dao = new PresidentDAO();
-    public PresidentController(){
-    }
 
     @RequestMapping(value = "/president/", method = RequestMethod.GET)
-    public President[] getAllPresidents(){
-        List<Object> list = dao.getIdList("president id");
+    public List<President> getAllPresidents(){
+        List<Path> paths = dao.getPresidentsPaths();
+        List<President> result = new ArrayList<>();
 
-        President[] result = new President[list.size()];
-        for(int i = 0; i < list.size(); i++){
-            result[i] = this.getPresidentById(Long.parseLong(String.valueOf(list.get(i))));
+        for(Path temp : paths){
+            Vertex president = temp.get("president");
+            Vertex team = temp.get("team");
+            result.add(mapper.VertexToEntity(president,team));
         }
-        dao.commit();
         return result;
     }
 

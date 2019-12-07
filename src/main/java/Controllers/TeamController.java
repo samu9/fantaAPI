@@ -7,6 +7,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,18 +15,21 @@ public class TeamController extends Controller {
     TeamMapper mapper = new TeamMapper();
     TeamDAO dao = new TeamDAO();
 
-    public TeamController(){
-    }
 
     @RequestMapping(value = "/team/", method = RequestMethod.GET)
-    public Team[] getAllTeams() {
-        List<Object> list = dao.getIdList();
+    public List<Team> getAllTeams() {
+        List<Path> paths = dao.getTeamsPaths();
+        List<Team> result = new ArrayList<>();
 
-        Team[] allTeams = new Team[list.size()];
-        for(int i = 0; i < list.size(); i++){
-            allTeams[i] = getTeamById(Long.parseLong(String.valueOf(list.get(i))));
+        for(Path temp : paths){
+            Vertex team = temp.get("team");
+            Vertex coach = temp.get("coach");
+            Vertex president = temp.get("president");
+            Vertex stadium = temp.get("stadium");
+            List<Object> birthdateList = dao.getListInValues(team,"plays for", "birthdate");
+            result.add(mapper.VertexToModel(team,coach,president,stadium,birthdateList));
         }
-        return allTeams;
+        return result;
     }
 
     @RequestMapping(value = "/team/{id}", method = RequestMethod.GET)
@@ -38,7 +42,7 @@ public class TeamController extends Controller {
         Vertex stadium = p.get("stadium");
         List<Object> list = dao.getListInValues(team,"plays for", "birthdate");
 
-        return mapper.VertexToTeam(team,coach,president,stadium,list);
+        return mapper.VertexToModel(team,coach,president,stadium,list);
     }
 
 }

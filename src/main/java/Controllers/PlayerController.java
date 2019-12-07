@@ -7,7 +7,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class PlayerController extends Controller{
@@ -20,21 +20,28 @@ public class PlayerController extends Controller{
         for(int i = 0; i < list.size(); i++){
             result[i] = getPlayerById(Long.parseLong(String.valueOf(list.get(i))),false);
         }
-        dao.commit();
         return result;
     }
 
     @RequestMapping(value = "/player/", method = RequestMethod.GET)
-    public Player[] getAllPlayers(@RequestParam(required = false) boolean showStats){
-        List<Object> list = dao.getIdList();
-        return getPlayersByIdList(list);
+    public List<Player> getAllPlayers(@RequestParam(required = false) boolean showStats){
+        List<Path> paths = dao.getAllPlayersPaths();
+        List<Player> result = new ArrayList<>();
+
+        for(Path temp : paths){
+            Vertex player = temp.get("player");
+            Vertex team = temp.get("team");
+            Vertex prosecutor = temp.get("prosecutor");
+            result.add(mapper.VertexToModel(player,null,team,prosecutor,false));
+        }
+        return result;
     }
 
 
     @RequestMapping(value = "/player/{id}", method = RequestMethod.GET)
     public Player getPlayerById(@PathVariable long id, @RequestParam(required = false) boolean showStats) throws IllegalStateException {
         Path p = dao.getPlayerPathById(id);
-        dao.commit();
+
         Vertex player = p.get("player");
         Vertex team = p.get("team");
         Vertex prosecutor = p.get("prosecutor");
@@ -46,6 +53,6 @@ public class PlayerController extends Controller{
             statList = dao.getListOutVertex(player,"stats");
         }
 
-        return mapper.VertexToPlayer(player, statList, team, prosecutor, showStats);
+        return mapper.VertexToModel(player, statList, team, prosecutor, showStats);
     }
 }

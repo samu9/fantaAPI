@@ -7,6 +7,7 @@ import Models.FantaTeam;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,7 +31,6 @@ public class UserController extends Controller {
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
     public long createUser(@RequestParam(value="username") String username, @RequestParam(value="email", required = true) String email){
         Vertex user = dao.addUser(username, email);
-        dao.commit();
 
         return mapper.mapUserId(user);
     }
@@ -39,9 +39,14 @@ public class UserController extends Controller {
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public User getUserById(@PathVariable long id){
         Vertex user = dao.getVertexById("user id", id);
-        List<Object> fantaTeams = dao.getListOutValues(user,"fanta owns", "fantateam id");
+        List<Vertex> fantaTeamList = dao.getListOutVertex(user,"fanta owns");
+        List<List<Object>> birthdateList = new ArrayList<>();
 
-        return mapper.VertexToEntity(user, fantaTeams);
+        for(Vertex temp : fantaTeamList){
+            birthdateList.add(dao.getListInValues(temp,"fanta plays for","birthdate"));
+        }
+
+        return mapper.VertexToEntity(user, fantaTeamList, birthdateList);
     }
 
 }

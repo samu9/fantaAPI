@@ -6,6 +6,7 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.JanusGraph;
 import org.janusgraph.core.JanusGraphFactory;
 
+import utility.labels.Property;
 import java.util.List;
 
 public class BaseDAO {
@@ -19,10 +20,19 @@ public class BaseDAO {
 
 
     public Vertex getVertexById(String property, long id){
-        return this.g.V().has(property, id).next();
+        Vertex result = this.g.V().has(property, id).next();
+        commit();
+        return result;
+    }
+    public List<Vertex> getVertexListByProperty(String property){
+        List<Vertex> result = this.g.V().has(property).toList();
+        commit();
+        return result;
     }
     public List<Object> getIdList(String property){
-        return getTraversalByProp(property).order().by("name").values(property).toList();
+        List<Object> result = getTraversalByProp(property).order().by("name").values(property).toList();
+        commit();
+        return result;
     }
 
 
@@ -31,38 +41,76 @@ public class BaseDAO {
     }
 
 
-    public Vertex getOutVertex(Vertex v, String edge) { return this.g.V(v).out(edge).next();}
-    public Vertex getOutVertex(long id, String idProperty, String edge) { return this.g.V().has(idProperty,id).out(edge).next();}
+    public Vertex getOutVertex(Vertex v, String edge) {
+        Vertex result = this.g.V(v).out(edge).next();
+        commit();
+        return result;
+    }
+    public Vertex getOutVertex(long id, String idProperty, String edge) {
+        Vertex result = this.g.V().has(idProperty,id).out(edge).next();
+        commit();
+        return result;
+    }
 
     public List<Vertex> getListOutVertex(Vertex v, String edge){
-        return this.g.V(v).out(edge).toList();
+        List<Vertex> result = this.g.V(v).out(edge).toList();
+        commit();
+        return result;
     }
     public List<Vertex> getListOutVertex(long id, String idProperty, String edge){
-        return this.g.V().has(idProperty,id).out(edge).toList();
+        List<Vertex> result = this.g.V().has(idProperty,id).out(edge).toList();
+        commit();
+        return result;
     }
 
     public List<Vertex> getListInVertex(Vertex v, String edge){
-        return this.g.V(v).in(edge).toList();
+        List<Vertex> result = this.g.V(v).in(edge).toList();
+        commit();
+        return result;
     }
     public List<Vertex> getListInVertex(long id, String idProperty, String edge){
-        return this.g.V().has(idProperty,id).in(edge).toList();
+        List<Vertex> result = this.g.V().has(idProperty,id).in(edge).toList();
+        commit();
+        return result;
     }
-    public List<Object> getListOutValues(Vertex v, String edge, String value) { return this.g.V(v).out(edge).values(value).toList(); }
-    public List<Object> getListOutValues(long id, String idProperty, String edge, String value) { return this.g.V().has(idProperty,id).out(edge).values(value).toList(); }
+    public List<Object> getListOutValues(Vertex v, String edge, String value) {
+        List<Object> result = this.g.V(v).out(edge).values(value).toList();
+        commit();
+        return result;
+    }
+    public List<Object> getListOutValues(long id, String idProperty, String edge, String value) {
+        List<Object> result = this.g.V().has(idProperty,id).out(edge).values(value).toList();
+        commit();
+        return result;
+    }
 
-    public List<Object> getListInValues(Vertex v, String edge, String value) { return this.g.V(v).in(edge).values(value).toList(); }
-    public List<Object> getListInValues(long id, String idProperty, String edge, String value) { return this.g.V().has(idProperty,id).in(edge).values(value).toList(); }
+    public List<Object> getListInValues(Vertex v, String edge, String value) {
+        List<Object> result = this.g.V(v).in(edge).values(value).toList();
+        commit();
+        return result;
+    }
+    public List<Object> getListInValues(long id, String idProperty, String edge, String value) {
+        List<Object> result = this.g.V().has(idProperty,id).in(edge).values(value).toList();
+        commit();
+        return result;
+    }
 
-    public long getNewId(String label){ return this.g.V().hasLabel(label).count().next() + 1; }
+    public long getNewId(String label){
+        long result = this.g.V().hasLabel(label).count().next() + 1;
+        commit();
+        return result;
+    }
 
 
     public boolean addEdge(Vertex from, Vertex to, String edgeLabel){
         this.g.V(from).as("a").V(to).addE(edgeLabel).from("a").next();
+        commit();
         return true;
     }
 
     public boolean addEdge(long idFrom, String idPropertyFrom, long idTo, String idPropertyTo, String edgeLabel){
         this.g.V().has(idPropertyTo,idTo).as("a").V().has(idPropertyFrom,idFrom).addE(edgeLabel).to("a");
+        commit();
         return true;
     }
 

@@ -2,6 +2,7 @@ package Mappers;
 
 import Models.Team;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import utility.labels.Property;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,21 +21,21 @@ public class TeamMapper extends Mapper {
         return Math.round(total/playersBirthdate.size() * 100.00) / 100.00;
     }
 
-    public long mapTeamId(Vertex team){ return this.mapLong(team,"team id"); }
+    public long mapTeamId(Vertex team){ return this.mapLong(team,Property.TEAM_ID[0]); }
 
-    public Team VertexToTeam(Vertex team, Vertex coach, Vertex president, Vertex stadium, List<Object> playersBirthdate){
+    public Team VertexToModel(Vertex team, Vertex coach, Vertex president, Vertex stadium, List<Object> playersBirthdate){
 
         long id = this.mapTeamId(team);
         String name = this.mapName(team);
         long players = playersBirthdate.size();
         double avgAge = getAvgAge(playersBirthdate);
-        String logo = this.mapString(team,"logo");
+        String logo = this.mapString(team,Property.LOGO[0]);
         String coachName = this.mapName(coach);
-        long coachId = this.mapLong(coach, "coach id");
+        long coachId = this.mapLong(coach, Property.COACH_ID[0]);
         String presidentName = this.mapName(president);
-        long presidentId = this.mapLong(president, "president id");
+        long presidentId = this.mapLong(president, Property.PRESIDENT_ID[0]);
         String stadiumName = this.mapName(stadium);
-        long stadiumId = this.mapLong(stadium, "stadium id");
+        long stadiumId = this.mapLong(stadium, Property.STADIUM_ID[0]);
 
         return new Team(id, name, players, avgAge, logo, coachName, coachId, presidentName, presidentId, stadiumName, stadiumId);
     }

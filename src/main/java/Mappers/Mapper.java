@@ -1,6 +1,7 @@
 package Mappers;
 
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import utility.labels.Property;
 
 import java.time.LocalDate;
 
@@ -24,22 +25,22 @@ public class Mapper {
     }
 
     public String mapName(Vertex v){
-        return this.mapString(v,"name");
+        return this.mapString(v,Property.NAME[0]);
     }
 
     public String mapBirthplace(Vertex v){
-        return this.mapString(v, "birthplace");
+        return this.mapString(v, Property.BIRTHPLACE[0]);
     }
 
     public LocalDate mapBirthdate(Vertex v){
-        return this.mapLocalDate(v,"birthdate");
+        return this.mapLocalDate(v,Property.BIRTHDATE[0]);
     }
 
     public String mapNationality(Vertex v){
-        return this.mapString(v, "nationality");
+        return this.mapString(v, Property.NATIONALITY[0]);
     }
 
     public String mapImg(Vertex v){
-        return this.mapString(v,"img");
+        return this.mapString(v,Property.IMG[0]);
     }
 }
